@@ -3,7 +3,6 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import "./Topbar.css"
 
 import { watchlist } from "../data/data";
 import { useState } from "react";
