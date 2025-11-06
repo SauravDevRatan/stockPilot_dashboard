@@ -19,7 +19,7 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("http://localhost:8080/api/v1/users/login", form,{ withCredentials: true });
+      const res = await axios.post("https://stockpilot-backend-615k.onrender.com/api/v1/users/login", form,{ withCredentials: true });
       // console.log(res.data);
       // console.log(res.data.data.accessToken);
 

@@ -24,7 +24,7 @@ function ActionWindow({ name, price, type, toggler }) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/users/me", { withCredentials: true })
+      .get("https://stockpilot-backend-615k.onrender.com/api/v1/users/me", { withCredentials: true })
       .then((res) => {
         if (res.data?.data.balance !== undefined) setBalance(res.data.data.balance);
       })
@@ -42,12 +42,12 @@ function ActionWindow({ name, price, type, toggler }) {
       setMsg("");
 
       const res = await axios.post(
-        "http://localhost:8080/api/v1/users/trade",
+        "https://stockpilot-backend-615k.onrender.com/api/v1/users/trade",
         { name, qty: count, price, mode: type },
         { withCredentials: true }
       );
 
-      setMsg(res.data.data.message || "Transaction successful ✅");
+      setMsg(res.data.data.message || "Transaction successful ");
       if (res.data?.data?.user?.balance !== undefined)
         setBalance(res.data.data.user.balance);
 
@@ -55,13 +55,13 @@ function ActionWindow({ name, price, type, toggler }) {
       navigate("/summary");
     } catch (err) {
       console.error("Error trading stock:", err);
-      setMsg(err.response?.data?.data?.message || "Transaction failed ❌");
+      setMsg(err.response?.data?.data?.message || "Transaction failed ");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Prevent "undefined" crash
+ 
   const numericPrice = Number(price) || 0;
   const totalCost = count * numericPrice;
   const isBuy = type === "buy";

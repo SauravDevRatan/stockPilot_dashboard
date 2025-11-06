@@ -19,7 +19,7 @@ function Summary() {
 let [allHoldings,setAllHoldings]=useState([]);
 
 useEffect(() => {
-  axios.get("http://localhost:8080/api/v1/users/holdingData",{withCredentials:true})
+  axios.get("https://stockpilot-backend-615k.onrender.com/api/v1/users/holdingData",{withCredentials:true})
     .then((res) => { 
       setAllHoldings(res.data.holding);
       setUser(res.data)

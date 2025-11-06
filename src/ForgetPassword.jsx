@@ -32,7 +32,7 @@ export default function ForgetPassword() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/users/verifyUser",
+        "https://stockpilot-backend-615k.onrender.com/api/v1/users/verifyUser",
         form,
         { withCredentials: true }
       );

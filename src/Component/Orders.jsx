@@ -16,7 +16,7 @@ export default function Orders() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/v1/users/holdingData",{withCredentials:true})
+      .get("https://stockpilot-backend-615k.onrender.com/api/v1/users/holdingData",{withCredentials:true})
       .then((res) => setAllOrders(res.data.order))
       .catch((err) => console.error("Error fetching positions:", err));
   }, []);

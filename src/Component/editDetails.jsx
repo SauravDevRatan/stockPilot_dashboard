@@ -27,7 +27,7 @@ function EditProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/v1/users/me", {
+        const res = await axios.get("https://stockpilot-backend-615k.onrender.com/api/v1/users/me", {
           withCredentials: true,
         });
         setUser({
@@ -70,7 +70,7 @@ function EditProfile() {
       if (newAvatar) formData.append("avatar", newAvatar);
 
       const res = await axios.put(
-        "http://localhost:8080/api/v1/users/updateDetails",
+        "https://stockpilot-backend-615k.onrender.com/api/v1/users/updateDetails",
         formData,
         {
           withCredentials: true,
