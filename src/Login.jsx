@@ -28,7 +28,7 @@ export default function Login() {
         return;
       }
       // console.log("Login success:", res.data);
-      localStorage.setItem("token", res.data.data.accessToken);
+      // localStorage.setItem("token", res.data.data.accessToken);
       navigate("/summary");
     } catch (err) {
       setError(err.response?.data?.data?.message || "Login failed");

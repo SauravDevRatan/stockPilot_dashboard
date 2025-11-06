@@ -14,7 +14,7 @@ function ProfileDropdown({ username, email }) {
       const res = await axios.post("http://localhost:8080/api/v1/users/logout",{},{withCredentials: true,});
       console.log(res.data);
 
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
 
       navigate("/login");
     } catch (err) {
