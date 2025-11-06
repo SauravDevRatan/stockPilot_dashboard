@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import {Box,Paper,TextField,Typography,Button,Snackbar,Alert,Avatar,CircularProgress,} from "@mui/material";
+import {
+  Box,
+  Paper,
+  TextField,
+  Typography,
+  Button,
+  Snackbar,
+  Alert,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +23,7 @@ function EditProfile() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  //  Fetch current user info
+  // Fetch current user info
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -33,12 +43,12 @@ function EditProfile() {
     fetchUser();
   }, [navigate]);
 
-  //  Handle text field changes
+  // Handle text field changes
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  //  Handle avatar selection
+  // Handle avatar selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setNewAvatar(file);
@@ -48,17 +58,34 @@ function EditProfile() {
     }
   };
 
-  //  Update basic info
+  // Submit form (fullName, email, and avatar)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
+      const formData = new FormData();
+      formData.append("fullName", user.fullName);
+      formData.append("email", user.email);
+      if (newAvatar) formData.append("avatar", newAvatar);
+
       const res = await axios.put(
         "http://localhost:8080/api/v1/users/updateDetails",
-        { fullName: user.fullName, email: user.email },
-        { withCredentials: true }
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
+
       setMessage(res.data.message || "Profile updated successfully!");
+      setUser({
+        fullName: res.data.data.user.fullName,
+        email: res.data.data.user.email,
+        avatar: res.data.data.user.avatar,
+      });
+      setPreview("");
+      setNewAvatar(null);
       setError("");
     } catch (err) {
       console.error(err);
@@ -70,42 +97,10 @@ function EditProfile() {
     }
   };
 
-  //  Upload new profile picture
-  const handleUploadAvatar = async () => {
-    if (!newAvatar) return setError("Please select an image first!");
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("avatar", newAvatar);
-
-    try {
-      const res = await axios.put(
-        "http://localhost:8080/api/v1/users/updateProfilePic",
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      setMessage(res.data.message || "Profile picture updated!");
-      setError("");
-      setUser({ ...user, avatar: res.data.data.user.avatar });
-      setPreview("");
-      setNewAvatar(null);
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Image upload failed");
-      setMessage("");
-    } finally {
-      setLoading(false);
-      setOpen(true);
-    }
-  };
-
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        background:"",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -126,16 +121,12 @@ function EditProfile() {
       >
         <Typography
           variant="h4"
-          sx={{
-            fontWeight: "bold",
-            color: "#1976d2",
-            mb: 3,
-          }}
+          sx={{ fontWeight: "bold", color: "#1976d2", mb: 3 }}
         >
           Edit Profile
         </Typography>
 
-        {/*  Profile Picture */}
+        {/* Profile Picture */}
         <Box sx={{ mb: 3 }}>
           <Avatar
             src={preview || user.avatar}
@@ -159,26 +150,16 @@ function EditProfile() {
             }}
           >
             Choose New Image
-            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </Button>
-          {newAvatar && (
-            <Button
-              variant="contained"
-              sx={{
-                ml: 2,
-                textTransform: "none",
-                background:
-                  "linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)",
-              }}
-              onClick={handleUploadAvatar}
-              disabled={loading}
-            >
-              {loading ? <CircularProgress size={22} color="inherit" /> : "Upload"}
-            </Button>
-          )}
         </Box>
 
-        {/* ✏️ Edit Info Form */}
+        {/* Edit Info Form */}
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -222,7 +203,7 @@ function EditProfile() {
         </form>
       </Paper>
 
-      {/*  Snackbar Notifications */}
+      {/* Snackbar Notifications */}
       <Snackbar
         open={open}
         autoHideDuration={4000}
