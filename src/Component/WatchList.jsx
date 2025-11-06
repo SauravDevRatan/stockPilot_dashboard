@@ -136,9 +136,6 @@ const HoverElement=({uid,price,onStockSelect})=>{
         <Tooltip title="Sell" arrow >
             <Button size="small" onClick={popUpflasherSell} sx={{backgroundColor:"red",color:"whitesmoke"}}>S</Button>
         </Tooltip>
-        {/* <Tooltip title="Chart" arrow>
-            <Button size="small" variant="outlined" ><EqualizerIcon/></Button>
-        </Tooltip> */}
         </>
     );
 }

@@ -13,11 +13,10 @@ function EditProfile() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  //  Fetch current user info
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/v1/users/me", {
+        const res = await axios.get("https://stockpilot-backend-pwna.onrender.com/api/v1/users/me", {
           withCredentials: true,
         });
         setUser({
@@ -54,7 +53,7 @@ function EditProfile() {
     setLoading(true);
     try {
       const res = await axios.put(
-        "http://localhost:8080/api/v1/users/updateDetails",
+        "https://stockpilot-backend-pwna.onrender.com/api/v1/users/updateDetails",
         { fullName: user.fullName, email: user.email },
         { withCredentials: true }
       );
@@ -79,7 +78,7 @@ function EditProfile() {
 
     try {
       const res = await axios.put(
-        "http://localhost:8080/api/v1/users/updateProfilePic",
+        "https://stockpilot-backend-pwna.onrender.com/api/v1/users/updateProfilePic",
         formData,
         {
           withCredentials: true,
@@ -222,7 +221,7 @@ function EditProfile() {
         </form>
       </Paper>
 
-      {/*  Snackbar Notifications */}
+      
       <Snackbar
         open={open}
         autoHideDuration={4000}

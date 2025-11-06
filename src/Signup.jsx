@@ -33,7 +33,7 @@ export default function Signup() {
       if (avatar) formData.append("avatar", avatar); // 🖼 add file if selected
 
       const res = await axios.post(
-        "http://localhost:8080/api/v1/users/register",
+        "https://stockpilot-backend-pwna.onrender.com/api/v1/users/register",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

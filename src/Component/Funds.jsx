@@ -22,7 +22,7 @@ const Funds = () => {
   
   // Fetch holdings
   useEffect(() => {
-    axios.get("http://localhost:8080/api/v1/users/holdingData",{withCredentials:true})
+    axios.get("https://stockpilot-backend-pwna.onrender.com/api/v1/users/holdingData",{withCredentials:true})
       .then((res) => {setHoldings(res.data?.holding),setTotalFunds(res.data?.balance)})
       .catch((err) => console.error("Error fetching holdings:", err));
   }, []);

@@ -28,7 +28,7 @@ function EditPassword() {
 
     try {
       const res = await axios.post(
-        "http://localhost:8080/api/v1/users/changePassword",
+        "https://stockpilot-backend-pwna.onrender.com/api/v1/users/changePassword",
         { oldPassword, newPassword1, newPassword2 },
         { withCredentials: true }
       );
