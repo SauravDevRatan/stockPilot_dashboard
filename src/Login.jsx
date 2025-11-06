@@ -23,7 +23,7 @@ export default function Login() {
       // console.log(res.data);
       // console.log(res.data.data.accessToken);
 
-      if (res.data.success !== 200 || !res.data.data.accessToken) {
+      if ( !res.data.data.accessToken) {
         setError(res.data.message || "Invalid credentials, Please try again.");
         return;
       }
