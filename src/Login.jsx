@@ -19,11 +19,11 @@ export default function Login() {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("https://stockpilot-backend-pwna.onrender.com/api/v1/users/login", form,{ withCredentials: true });
+      const res = await axios.post("http://localhost:8080/api/v1/users/login", form,{ withCredentials: true });
       // console.log(res.data);
       // console.log(res.data.data.accessToken);
 
-      if ( !res.data.data.accessToken) {
+      if (res.data.success !== 200 || !res.data.data.accessToken) {
         setError(res.data.message || "Invalid credentials, Please try again.");
         return;
       }

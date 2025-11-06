@@ -21,7 +21,7 @@ const Menu = () => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          "https://stockpilot-backend-pwna.onrender.com/api/v1/users/me", 
+          "http://localhost:8080/api/v1/users/me", 
           { withCredentials: true } 
         );
         
