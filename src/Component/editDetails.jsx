@@ -1,15 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Paper,
-  TextField,
-  Typography,
-  Button,
-  Snackbar,
-  Alert,
-  Avatar,
-  CircularProgress,
-} from "@mui/material";
+import {Box,Paper,TextField,Typography,Button,Snackbar,Alert,Avatar,CircularProgress,} from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -21,15 +11,17 @@ function EditProfile() {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   // Fetch current user info
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("https://stockpilot-backend-615k.onrender.com/api/v1/users/me", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "https://stockpilot-backend-615k.onrender.com/api/v1/users/me",
+          { withCredentials: true }
+        );
         setUser({
           fullName: res.data.data.fullName || "",
           email: res.data.data.email || "",
@@ -52,44 +44,59 @@ function EditProfile() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setNewAvatar(file);
-    if (file) {
-      const previewUrl = URL.createObjectURL(file);
-      setPreview(previewUrl);
+    if (file) setPreview(URL.createObjectURL(file));
+  };
+
+  // Update fullName & email
+  const handleUpdateDetails = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        "https://stockpilot-backend-615k.onrender.com/api/v1/users/updateDetails",
+        { fullName: user.fullName, email: user.email },
+        { withCredentials: true }
+      );
+      setUser((prev) => ({
+        ...prev,
+        fullName: res.data.data.user.fullName,
+        email: res.data.data.user.email,
+      }));
+      setMessage(res.data.message || "Details updated successfully!");
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Update failed");
+      setMessage("");
+    } finally {
+      setLoading(false);
+      setOpen(true);
     }
   };
 
-  // Submit form (fullName, email, and avatar)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
+  // Update avatar
+  const handleUpdateAvatar = async () => {
+    if (!newAvatar) return;
     try {
+      setLoading(true);
       const formData = new FormData();
-      formData.append("fullName", user.fullName);
-      formData.append("email", user.email);
-      if (newAvatar) formData.append("avatar", newAvatar);
+      formData.append("avatar", newAvatar);
 
       const res = await axios.put(
-        "https://stockpilot-backend-615k.onrender.com/api/v1/users/updateDetails",
+        "https://stockpilot-backend-615k.onrender.com/api/v1/users/updateProfilepic",
         formData,
         {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      setMessage(res.data.message || "Profile updated successfully!");
-      setUser({
-        fullName: res.data.data.user.fullName,
-        email: res.data.data.user.email,
-        avatar: res.data.data.user.avatar,
-      });
+      setUser((prev) => ({ ...prev, avatar: res.data.data.user.avatar }));
       setPreview("");
       setNewAvatar(null);
+      setMessage(res.data.message || "Profile picture updated!");
       setError("");
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || "Update failed");
+      setError(err.response?.data?.message || "Avatar update failed");
       setMessage("");
     } finally {
       setLoading(false);
@@ -150,57 +157,58 @@ function EditProfile() {
             }}
           >
             Choose New Image
-            <input
-              type="file"
-              hidden
-              accept="image/*"
-              onChange={handleFileChange}
-            />
+            <input type="file" hidden accept="image/*" onChange={handleFileChange} />
+          </Button>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 1, textTransform: "none" }}
+            onClick={handleUpdateAvatar}
+            disabled={loading || !newAvatar}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Update Avatar"}
           </Button>
         </Box>
 
         {/* Edit Info Form */}
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Full Name"
-            name="fullName"
-            value={user.fullName}
-            onChange={handleChange}
-            variant="outlined"
-            sx={{ mb: 3 }}
-          />
-          <TextField
-            fullWidth
-            label="Email"
-            name="email"
-            value={user.email}
-            onChange={handleChange}
-            variant="outlined"
-            sx={{ mb: 4 }}
-          />
-
-          <Button
-            fullWidth
-            variant="contained"
-            size="large"
-            sx={{
+        <TextField
+          fullWidth
+          label="Full Name"
+          name="fullName"
+          value={user.fullName}
+          onChange={handleChange}
+          variant="outlined"
+          sx={{ mb: 3 }}
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          name="email"
+          value={user.email}
+          onChange={handleChange}
+          variant="outlined"
+          sx={{ mb: 3 }}
+        />
+        <Button
+          fullWidth
+          variant="contained"
+          size="large"
+          sx={{
+            background:
+              "linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)",
+            color: "white",
+            fontWeight: "bold",
+            textTransform: "none",
+            "&:hover": {
               background:
-                "linear-gradient(135deg, #1976d2 0%, #2196f3 50%, #42a5f5 100%)",
-              color: "white",
-              fontWeight: "bold",
-              textTransform: "none",
-              "&:hover": {
-                background:
-                  "linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #1e88e5 100%)",
-              },
-            }}
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Save Changes"}
-          </Button>
-        </form>
+                "linear-gradient(135deg, #1565c0 0%, #1976d2 50%, #1e88e5 100%)",
+            },
+          }}
+          onClick={handleUpdateDetails}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Save Details"}
+        </Button>
       </Paper>
 
       {/* Snackbar Notifications */}
